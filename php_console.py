@@ -27,20 +27,30 @@ class PhprWindow(Gtk.Window):
 
         hb.pack_start(box)
 
+
+        scrolled_result = Gtk.ScrolledWindow()
+        scrolled_result.set_hexpand(True)
+        scrolled_result.set_vexpand(True)
+        scrolled_source = Gtk.ScrolledWindow()
+        scrolled_source.set_hexpand(True)
+        scrolled_source.set_vexpand(True)
+
         self.result = Gtk.TextView()
         self.result.set_editable(False)
         self.result.props.is_focus = False
+        scrolled_result.add(self.result);
 
         self.make_source()
         if os.path.isfile('/tmp/vxphpconsole.php'):
             file = open('/tmp/vxphpconsole.php', 'r')
             self.source.get_buffer().set_text(file.read())
             file.close()
+        scrolled_source.add(self.source)
 
         paned = Gtk.Paned().new(Gtk.Orientation(1))
         paned.set_border_width(4)
-        paned.pack1(self.source, True, True)
-        paned.pack2(self.result, False, True)
+        paned.pack1(scrolled_source, True, True)
+        paned.pack2(scrolled_result, False, True)
         paned.set_position(260)
         self.add(paned)
         self.source.grab_focus()
