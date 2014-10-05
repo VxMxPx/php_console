@@ -12,6 +12,12 @@ The code will be saved to `/tmp` and when you open the application next time,
 it will load your previous code. But since this is `/tmp` code will not survive
 reboots, so don't rely on it.
 
+## Changelog
+
+- 2014-10-05:
+    - Added scrollbars
+    - Added support for realtime checkcing
+
 ## Future plans
 
 ... if I won't be too lazy or too busy:

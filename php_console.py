@@ -17,13 +17,21 @@ class PhprWindow(Gtk.Window):
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         Gtk.StyleContext.add_class(box.get_style_context(), "linked")
-        button = Gtk.Button()
+        # Play button
+        play_button = Gtk.Button()
         icon = Gio.ThemedIcon(name="media-playback-start-symbolic")
         image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
-        button.add(image)
-        box.add(button)
-
-        button.connect('clicked', self.run)
+        play_button.add(image)
+        box.add(play_button)
+        play_button.connect('clicked', self.run)
+        # Real-time check button
+        realtime_button = Gtk.ToggleButton()
+        icon = Gio.ThemedIcon(name="view-refresh-symbolic")
+        self.rtb_image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
+        self.rtb_image.set_opacity(0.4)
+        realtime_button.add(self.rtb_image)
+        box.add(realtime_button)
+        realtime_button.connect('toggled', self.realtime_toggled)
 
         hb.pack_start(box)
 
@@ -55,9 +63,18 @@ class PhprWindow(Gtk.Window):
         self.add(paned)
         self.source.grab_focus()
 
+        # When F5 is pressed!
         self.connect('key-press-event', self.run)
 
         self.show_all()
+
+    def realtime_toggled(self, sender):
+        if sender.get_active():
+            self.rtb_image.set_opacity(1)
+            self.chid = self.source.get_buffer().connect('changed', self.run)
+        else:
+            self.rtb_image.set_opacity(0.4)
+            self.source.get_buffer().disconnect(self.chid)
 
     def run(self, sender, key=None):
         if key:
@@ -69,9 +86,6 @@ class PhprWindow(Gtk.Window):
         file.write(sbuffer.get_text(
             sbuffer.get_start_iter(), sbuffer.get_end_iter(), False))
         file.close()
-        # c = subprocess.call("/usr/bin/env php -f /tmp/vxphpconsole.php", shell=True)
-        # c = subprocess.Popen("/usr/bin/env php -f /tmp/vxphpconsole.php",
-            # shell=True).stdout.read()
         lines = ''
         p = subprocess.Popen('/usr/bin/env php -f /tmp/vxphpconsole.php',
             shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
