@@ -1,5 +1,7 @@
 # PHP Console
 
+**See: https://github.com/VxMxPx/Evalify for newer version written in Vala.**
+
 A tiny Python3 application using GTK3, which allow you to simply
 execute a PHP script without saving it. It's useful when you want to quickly
 test a multi-line code snippet. It's in a way fancy version of `php -a`.
